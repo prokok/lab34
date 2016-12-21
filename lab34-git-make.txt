@@ -1,0 +1,151 @@
+===========================================================================================
+===========================================================================================
+=====================================<SHELL COMMANDS>======================================
+http://swcarpentry.github.io/shell-novice/
+
+
+
+$ curl -O http://textfiles.com/food/bread.txt
+$ curl --remote-name http://textfiles.com/food/bread.txt
+- does exactly the same thing
+$ curl -o sexy.txt http://textfiles.com/food/bread.txt
+- change the name of the file(sexy.txt)
+
+------------------------------------------------------------------------------------------------
+
+cd .
+	change current working directory to its current working directry
+cd ..
+	chagne current working directory to its parenet directory
+cd /
+	change current working directory to Root directory
+cd 
+	change current working directory to Home directory	
+cd ~
+	change currnet working directory to the current's user's home directory
+cd -
+	change current working directory to the previous directory I was in.
+	
+------------------------------------------------------------------------------------------------
+Pressing tab again does nothing, since there are 19 possibilities; 
+pressing tab twice brings up a list of all the files, and so on. This is called tab completion.
+------------------------------------------------------------------------------------------------
+
+ls commnad
+
+The -l arguments makes ls use a long listing format, showing not only the file/directory names
+but also additional information such as the file size and the time of its last modification. 
+The -h argument makes the file size ¡°human readable¡±, i.e. display something like 5.3K instead of 5369.
+
+The command ls -R lists the contents of directories recursively, i.e., 
+lists their sub-directories, sub-sub-directories, and so on in alphabetical order at each level. 
+The command ls -t lists things by time of last change, with most recently changed files or directories first. 
+In what order does ls -R -t display things? Hint: ls -l uses a long listing format to view timestamps.
+
+-------------------------------------------------------------------------------------------------
+
+Removing the files in a directory recursively can be very dangerous operation. 
+If we¡¯re concerned about what we might be deleting we can add the ¡°interactive¡± flag -i 
+to rm which will ask us for confirmation before each step
+
+$ rm -r -i thesis
+rm: descend into directory ¡®thesis¡¯? y
+rm: remove regular file ¡®thesis/draft.txt¡¯? y
+rm: remove directory ¡®thesis¡¯? y
+This removes everything in the directory, then the directory itself, 
+asking at each step for you to confirm the deletion.
+
+===========================================================================================
+===========================================================================================
+========================================<MARKDOWN>=========================================
+http://www.markdowntutorial.com/
+
+#head1  
+##head2  
+###head3  
+####head4  
+#####head5  
+######head6
+
+
+_words in italics_
+
+
+**words in bold**
+
+
+**_words in both italics and bold_**
+
+
+[links(for urls)](www.google.com)
+
+![links for image](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+
+
+ * unordered list1
+ * unordered list2
+ * unordered list3
+
+
+ 1. ordered list1
+ 2. ordered list2
+ 3. ordered list3
+ 4. ordered list4
+
+
+* lists with subitems
+    * PHILHOON OH
+    * STAT159 STUDENT
+    * AGE OF 25
+    * STRUGGLING IN 159 CLASS
+
+	
+Horizontal rules1...  
+
+--- 
+
+Horizontal rules2(Hypens)  
+
+***  
+
+Horizontal rules3(Asterisks)  
+
+
+|table| is | hard|
+| --- | --- | --- |
+| hello | my | name |
+| is | Philhoon | OH | 	
+
+ 
+ 
+Markdown | Less | Pretty
+--- | --- | ---
+*Still* | `renders` | **nicely**
+1 | 2 | 3
+
+
+ 
+>To be or not to be, that is the question  
+
+
+
+```r
+	p = rnorm(100, mean=0, sd=1)    
+	p
+```
+
+
+===========================================================================================
+===========================================================================================
+========================================<Pandoc Commands>===========================================
+http://pandoc.org/demos.html
+
+# from markdown to html
+pandoc -s document.md -o document.html
+
+# from markdown to pdf
+pandoc document.md --latex-engine=xelatex -o document.pdf
+# alternatively
+pandoc document.md --latex-engine=pdflatex -o document.pdf
+
+

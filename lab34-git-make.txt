@@ -1,151 +1,366 @@
-===========================================================================================
-===========================================================================================
-=====================================<SHELL COMMANDS>======================================
-http://swcarpentry.github.io/shell-novice/
+	===========================================================================================
+	===========================================================================================
+	========================================<Git Command>===========================================
+http://swcarpentry.github.io/git-novice/
+
+$ git diff HEAD mars.txt
+
+$ git diff HEAD~1 mars.txt
+If we want to see what we changed at different steps, we can use git diff again, but with the notation HEAD~1, HEAD~2, and so on, to refer to old commits:
+$ git diff HEAD~1 mars.txt
+$ git diff HEAD~2 mars.txt
+$ git diff f22b25e3233b4645dabd0d81e651fe074bd8e73b mars.txt
+$ git diff f22b25e mars.txt
+
+We can put things back the way they were by using git checkout:
+$ git checkout HEAD mars.txt
+$ git checkout f22b25e mars.txt
+
+Don¡¯t Lose Your HEAD
+Above we used
+$ git checkout f22b25e mars.txt
+to revert mars.txt to its state after the commit f22b25e. If you forget mars.txt in that command, Git will tell you that ¡°You are in ¡®detached HEAD¡¯ state.¡± In this state, you shouldn¡¯t make any changes. You can fix this by reattaching your head using git checkout master
+
+Simplifying the Common Case
+If you read the output of git status carefully, you¡¯ll see that it includes this hint:
+(use "git checkout -- <file>..." to discard changes in working directory)
+As it says, git checkout without a version identifier restores files to the state saved in HEAD. The double dash -- is needed to separate the names of the files being recovered from the command itself: without it, Git would try to use the name of the file as the commit identifier.
+
+Getting Rid of Staged Changes
+git checkout can be used to restore a previous commit when unstaged changes have been made, but will it also work for changes that have been staged but not committed? Make a change to mars.txt, add that change, and use git checkout to see if you can remove your change.
+
+Explore and Summarize Histories
+Exploring history is an important part of git, often it is a challenge to find the right commit ID, especially if the commit is from several months ago.
+Imaging the planets project has more than 50 files. You would like to find a commit with specific text in mars.txt is modified. When you type git log, a very long list appeared, How can you narrow down the search?
+Recorded that the git diff command allow us to explore one specific file, e.g. git diff mars.txt. We can apply the similar idea here.
+$ git log mars.txt
+Unfortunately some of these commit messages are very ambiguous e.g. update files. How can you search through these files?
+Both git diff and git log are very useful and they summarize different part of the history for you. Is that possible to combine both? Let¡¯s try the following:
+$ git log --patch mars.txt
+You should get a long list of output, and you should be able to see both commit messages and the difference between each commit.
+Question: What does the following command do?
+$ git log --patch HEAD~3 HEAD~1 *.txt
 
 
+Ignoring Things
+$ touch a.dat
+$ vim .gitignore
+	a.dat
+$ git add .gitignore
+$ git commit -m "Add the ignore file"
+$ git status
+$ git status --ignored
 
-$ curl -O http://textfiles.com/food/bread.txt
-$ curl --remote-name http://textfiles.com/food/bread.txt
-- does exactly the same thing
-$ curl -o sexy.txt http://textfiles.com/food/bread.txt
-- change the name of the file(sexy.txt)
+Including Specific Files
+*.data           # ignore all data files
+!final.data      # except final.data
+The exclamation point operator will include a previously excluded entry.
 
-------------------------------------------------------------------------------------------------
+Ignoring all data Files in a Directory
+Appending results/data/position/gps/*.data will match every file in results/data/position/gps that ends with .data. The file results/data/position/gps/info.txt will not be ignored.
 
-cd .
-	change current working directory to its current working directry
-cd ..
-	chagne current working directory to its parenet directory
-cd /
-	change current working directory to Root directory
-cd 
-	change current working directory to Home directory	
-cd ~
-	change currnet working directory to the current's user's home directory
-cd -
-	change current working directory to the previous directory I was in.
+*.data
+!*.data
+The ! modifier will negate an entry from a previously defined ignore pattern. Because the !*.data entry negates all of the previous .data files in the .gitignore, none of them will be ignored, and all .data files will be tracked.
+
+
+----------------------Remotes in GitHub------------------
+
+Copy that URL from the browser, go into the local planets repository, and run this command:
+
+$ git remote add origin https://github.com/vlad/planets.git
+Make sure to use the URL for your repository rather than Vlad¡¯s: the only difference should be your username instead of vlad.
+
+We can check that the command has worked by running git remote -v:
+
+$ git remote -v
+origin   https://github.com/vlad/planets.git (push)
+origin   https://github.com/vlad/planets.git (fetch)
+The name origin is a local nickname for your remote repository: we could use something else if we wanted to, but origin is by far the most common choice.
+
+Once the nickname origin is set up, this command will push the changes from our local repository to the repository on GitHub:
+
+$ git push origin master
+Counting objects: 9, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (6/6), done.
+Writing objects: 100% (9/9), 821 bytes, done.
+Total 9 (delta 2), reused 0 (delta 0)
+To https://github.com/vlad/planets
+ * [new branch]      master -> master
+Branch master set up to track remote branch master from origin.
+
+We can pull changes from the remote repository to the local one as well:
+$ git pull origin master
+From https://github.com/vlad/planets
+ * branch            master     -> FETCH_HEAD
+Already up-to-date.
+Pulling has no effect in this case because the two repositories are already synchronized. If someone else had pushed some changes to the repository on GitHub, though, this command would download them to our local repository.
+
+--------------------------------Fixing Remote Settings-------------------------
+It happens quite often in practice that you made a typo in the remote URL. This exercice is about how to fix this kind of issues. First start by adding a remote with an invalid URL:
+git remote add broken https://github.com/this/url/is/invalid
+Do you get an error when adding the remote? Can you think of a command that would make it obvious that your remote URL was not valid? Can you figure out how to fix the URL (tip: use git remote -h)? Don¡¯t forget to clean up and remove this remote once you are done with this exercise.
+
+
+Removing link between local and github repository	
+git remote remove origin
 	
-------------------------------------------------------------------------------------------------
-Pressing tab again does nothing, since there are 19 possibilities; 
-pressing tab twice brings up a list of all the files, and so on. This is called tab completion.
-------------------------------------------------------------------------------------------------
-
-ls commnad
-
-The -l arguments makes ls use a long listing format, showing not only the file/directory names
-but also additional information such as the file size and the time of its last modification. 
-The -h argument makes the file size ¡°human readable¡±, i.e. display something like 5.3K instead of 5369.
-
-The command ls -R lists the contents of directories recursively, i.e., 
-lists their sub-directories, sub-sub-directories, and so on in alphabetical order at each level. 
-The command ls -t lists things by time of last change, with most recently changed files or directories first. 
-In what order does ls -R -t display things? Hint: ls -l uses a long listing format to view timestamps.
-
--------------------------------------------------------------------------------------------------
-
-Removing the files in a directory recursively can be very dangerous operation. 
-If we¡¯re concerned about what we might be deleting we can add the ¡°interactive¡± flag -i 
-to rm which will ask us for confirmation before each step
-
-$ rm -r -i thesis
-rm: descend into directory ¡®thesis¡¯? y
-rm: remove regular file ¡®thesis/draft.txt¡¯? y
-rm: remove directory ¡®thesis¡¯? y
-This removes everything in the directory, then the directory itself, 
-asking at each step for you to confirm the deletion.
 
 ===========================================================================================
 ===========================================================================================
-========================================<MARKDOWN>=========================================
-http://www.markdowntutorial.com/
-
-#head1  
-##head2  
-###head3  
-####head4  
-#####head5  
-######head6
+========================================<Make Command>===========================================
+https://github.com/unix-tools/tutorial-makefiles
 
 
-_words in italics_
+
+<<<<2. More than one dependency>>>>
 
 
-**words in bold**
 
+Often, a target file will depend on several input files. 
+For instance, consider the example 02-various-dependencies/ in the folder examples/
 
-**_words in both italics and bold_**
+This example is about a banana bread recipe. 
+There is one target output.html, but now there are three dependencies
+: first.md, second.md, and third.md.
 
+We'll use pandoc again to generate the html output file. 
+One of the nice things about pandoc is that you can pass any number of input files
+ and it will concatenate them to produce the output:
 
-[links(for urls)](www.google.com)
+output.html: first.md second.md third.md
+    pandoc first.md second.md third.md -s -o output.html
+	
+The pandoc command can actually be shorten using the asterisk wildcard to indicate
+ all the input files with extension .md:
 
-![links for image](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
-
-
- * unordered list1
- * unordered list2
- * unordered list3
-
-
- 1. ordered list1
- 2. ordered list2
- 3. ordered list3
- 4. ordered list4
-
-
-* lists with subitems
-    * PHILHOON OH
-    * STAT159 STUDENT
-    * AGE OF 25
-    * STRUGGLING IN 159 CLASS
+output.html: first.md second.md third.md
+    pandoc *.md -s -o output.html
 
 	
-Horizontal rules1...  
-
---- 
-
-Horizontal rules2(Hypens)  
-
-***  
-
-Horizontal rules3(Asterisks)  
-
-
-|table| is | hard|
-| --- | --- | --- |
-| hello | my | name |
-| is | Philhoon | OH | 	
-
- 
- 
-Markdown | Less | Pretty
---- | --- | ---
-*Still* | `renders` | **nicely**
-1 | 2 | 3
-
-
- 
->To be or not to be, that is the question  
+	
+<<<<3. More than one target>>>>
 
 
 
-```r
-	p = rnorm(100, mean=0, sd=1)    
-	p
-```
+Consider any of the first two examples (e.g. 01-minimal/ or 02-various-dependencies/). 
+In these examples, there's only one generated output file: output.html.
 
-
-===========================================================================================
-===========================================================================================
-========================================<Pandoc Commands>===========================================
-http://pandoc.org/demos.html
+We can use pandoc to create files in other formats rather than just html. 
+For example, here are three rules that take the same input file
+, but produce outputs in different formats(html, latex, reStructuredText)
 
 # from markdown to html
-pandoc -s document.md -o document.html
+output.html: input.md
+    pandoc input.md -s -o output.html
 
-# from markdown to pdf
-pandoc document.md --latex-engine=xelatex -o document.pdf
-# alternatively
-pandoc document.md --latex-engine=pdflatex -o document.pdf
+# from markdown to latex
+output.tex: input.md
+    pandoc input.md -s -o output.tex
+
+# from markdown to reStructuredText
+output.txt: input.md
+    pandoc input.md -t rst -s -o output.txt
+	
+If you open the command line and run make, 
+Make will execute just the first target (this is the default behavior of Make).
+
+To run a specific target, call the make command followed 
+by the name of the target you want to be generated.
+So, if you want to create the latex file, here's how to call make
+
+make output.tex
+
+If you want to generate the reStrcuturedText:
+make output.txt
 
 
+The all target
+
+When you have several output files (like in the example above), 
+sometimes you may want Make to execute them all without having 
+to call make on each single output.
+
+To tell Make to run several rules, you can use the all target. 
+This is one of the special target names that Make recognizes
+ and treats it in a very specific way.
+
+Here's the content of a Makefile that includes an all: 
+target as the first rule. Because the target all is the first target, 
+calling make will execute this rule by default:
+
+# all
+all: output.html output.tex output.txt
+# from markdown to html
+output.html: input.md
+    pandoc input.md -s -o output.html
+# from markdown to latex
+output.tex: input.md
+    pandoc input.md -s -o output.tex
+# from markdown to reStructuredText
+output.txt: input.md
+    pandoc input.md -t rst -s -o output.txt
+
+
+Note that the target all has three dependencies
+(i.e. the output files), but has no associated command.
+
+So how does Make know what to do with this rule? 
+Well, Make takes the dependencies, and then look at the rest of targets 
+to see if they are part of the all's dependencies.
+
+all is one of the standard targets in Make, 
+and most users use it to compile the entire program.
+When you use all, it should be the default target.
+
+
+
+
+<<<<4. Dependent Targets>>>>
+
+
+
+Input and Output files
+
+regression-data.R generates the random vectors,
+fits the regression model, and sends the data 
+and the model to a binary file regression.RData
+
+regression-model.R reads in the regression data, 
+and then sends the summary of the regression object 
+to the file regression-model.md
+
+regression-plot.R reads in the regression data, 
+and creates a scatter plot that is saved in the file scatterplot.png
+
+The main output is the file regression.html 
+which depends directly on report.md, and regression-model.md
+
+The file report.md, in turn, uses scatterplot.png
+
+Makefile
+
+Here's the content of the Makefile:
+
+all: regression.html
+
+regression.html: report.md regression-model.md scatterplot.png
+    pandoc report.md regression-model.md -s -o regression.html
+
+scatterplot.png: regression-plot.R regression.RData
+    Rscript regression-plot.R
+
+regression-model.md: regression-model.R regression.RData
+    Rscript regression-model.R
+
+regression.RData: regression-data.R
+    Rscript regression-data.R
+
+	
+	
+<<<<5. File Systems>>>>	
+
+
+
+Files in several directories
+
+The examples covered so far have all the input and output files 
+located in one single directory. 
+But this is rarely how most real projects are structured.
+
+In this lesson, we are going to discuss a toy example of an "article" about the R project.
+All the directories and files are in the example folder 05-file-system/ 
+which has the following structure:
+
+05-file-system/
+    Makefile
+    sections/
+        01-intro.md
+        02-environment.md
+        03-logo.md
+    images/
+        Rlogo-old.png
+        Rlogo-new.png
+
+		
+		
+The idea is to generate an html file R-project.html
+(containing some text about the R project), 
+that is built with the .md files in sections/.
+
+To make things a bit more interesting, 
+the generated output file will be placed 
+at the level of the parent directory (i.e. 05-file-system/)
+
+Generating the html document
+
+To generate the output R-project.html file from the 3 .md files,
+ you would have to cd into sections/ and then run pandoc like so:
+
+pandoc *.md -s -o R-project.html
+
+But remember that we want R-project.html to be at the parent level.
+Assuming that you are inside sections/, 
+you would need to mv the output file R-project.html one level up:
+
+mv R-project.html ../
+
+
+---The Makefile
+
+How do you tell Make to switch between subdirectories
+and move files to different locations? 
+Very easy: using shell commands to navigate the file system.
+
+Here's how the Makefile looks like:
+
+all: R-project.html
+
+R-project.html: sections/01-intro.md sections/02-environment.md sections/03-logo.md
+    cd sections; pandoc *.md -s -o R-project.html
+    cd sections; mv R-project.html ../
+
+	
+Important things to keep in mind: 
+the Makefile lives at the top level.
+All dependencies are in the sections/ subdirectory.
+
+R-project.html is the target file
+The dependencies are the markdown files inside the sections/ folder
+The recipe involves two commands:
+	first we cd into sections/ and then call pandoc
+	then we cd again into sections/ and mv the target file one level up
+	
+All the commands for each rule have as a starting point the location 
+where the Makefile is. This is why we need to cd into sections/ in order to run pandoc.
+
+Note the use of the semicolon in the command:
+
+cd sections; pandoc *.md -s -o R-project.html
+
+the semicolon lets us group several related instructions in one single line.
+
+---Relative paths of image files
+
+There is one last important detail that we need to mention. 
+As you can tell from the file structure, there is an images/ folder. 
+This is where the PNG files of the R logos are located.
+
+Those logos are used inside the file 03-logo.md. 
+If you take a look at this file, you will see a couple of lines like these:
+
+### Old and New Logos
+
+![R old logo](images/Rlogo-old.png)
+
+### New Logo
+
+![R new logo](images/Rlogo-new.png)
+
+
+Pay attention to the path names of each image file. 
+They are paths relative to the location of R-project.html. -output file-
+The output file is located at the top level,
+and this is exactly where images/ is located too.
+In this way R-project.html can load correctly the R logos.
